@@ -57,6 +57,7 @@ AST = 4
 
 key_column_map = { 'time' : ( TIME, ), 
                    'beacon' : ( BEACON, ),
+                   'track id' : ( TRACK_ID, ),
                    'geodetic position' : ( POS_LAT, POS_LON, POS_ALT ),
                    'enu velocity' : ( VEL_E, VEL_N, VEL_U ),
                    'system position' : ( SYS_X, SYS_Y, SYS_Z ),
@@ -68,7 +69,8 @@ key_column_map = { 'time' : ( TIME, ),
 
 sensor_map = { 'radar' : set( [ RADAR, ] ),
                'adsb' : set( [ ADSB, ] ),
-               'ast' : set( [ AST, ] ) }
+               'ast' : set( [ AST, ] ),
+               'any' : set( [ RADAR, ADSB, AST ] ) }
 
 def read( filename ) :
     with open( filename, 'r' ) as file :
@@ -98,14 +100,25 @@ class Track( object ) :
     dataIsGood = False
 
     def __init__( self, data,  **kwargs ) :
+        track_type = SENSOR_TRACK
+        track_id = []
+        sensor = []
+        beacon = []
         if kwargs is not None :
             for key, value in kwargs.iteritems() :
                 if key == 'sensor' :
                     sensor = value
+                    data = [ x for x in data if x[ SENSOR ] in sensor_map[ sensor ] ]
                 if key == 'beacon' :
                     beacon = value
+                    data = [ x for x in data if x[ BEACON ] == beacon ]
+                if key == 'track_type' :
+                    track_type = value
+                if key == 'track_id' :
+                    track_id = value
+                    data = [ x for x in data if x[ TRACK_ID ] == track_id ]
 
-        data = [ x for x in data if x[ BEACON ] == beacon and x[ TRACK_TYPE ] == SENSOR_TRACK and x[ SENSOR ] in sensor_map[ sensor ] ]
+        data = [ x for x in data if x[ TRACK_TYPE ] == track_type ]
         #data = data[ ( data[ :, BEACON ] == beacon ) * ( data[ :, TRACK_TYPE ] == SENSOR_TRACK ), : ]
         #f = np.array( [ True if x in sensor_map[ sensor ] else False for x in data[ :, SENSOR ] ] )
         #data = data[ f ]
@@ -120,6 +133,7 @@ class Track( object ) :
             self.pos_sys = get( data, item = 'system position' )
             self.own_pos_geod = get( data, item = 'ownship position' )
             self.own_vel_enu = get( data, item = 'ownship velocity' )
+            self.track_id = get( data, item = 'track id' )
 
             #if sensor == 'radar' :
             #    self.residuals = get( data, item = 'residuals' )

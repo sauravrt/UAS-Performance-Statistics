@@ -56,3 +56,4 @@ class Aircraft( object ) :
         self.time = get( data, item = 'time' )
         self.pos_geod = get( data, item = 'geodetic position' )
         self.vel_enu = get( data, item = 'enu velocity' )
+        self.pos_sys = get( data, item = 'system position' )

@@ -15,8 +15,8 @@ output_folders = ( #'C:\\Users\\pkhomchuk\\My Projects\\UAS - FAA Delivery\\UAS 
                    #'C:\\Users\\pkhomchuk\\My Projects\\UAS - FAA Software\\Tracker\\Radar_3D_1',
                    #'C:\\Users\\pkhomchuk\\My Projects\\UAS - FAA Delivery\\UAS - FAA Software\\Tracker\\Maneuver',
                    #'C:\\Users\\pkhomchuk\\My Projects\\UAS - FAA Delivery\\UAS - FAA Software\\Tracker\\Straight',
-                   'C:\\Users\\pkhomchuk\\My Projects\\UAS - FAA Delivery\\UAS - FAA Software\\Tracker\\3D',
-                   'C:\\Users\\pkhomchuk\\My Projects\\UAS - FAA Delivery\\UAS - FAA Software\\Tracker\\4D',
+                   'C:\\Users\\pkhomchuk\\My Projects\\UAS - FAA Software June 2016\\Tracker\\Best Sensor',
+                   'C:\\Users\\pkhomchuk\\My Projects\\UAS - FAA Software June 2016\\Tracker\\Sequential Update',
                    '' )
 
 truth_folders = ( #'C:\\Users\\pkhomchuk\\My Projects\\UAS encounters\\MIT_LL\\Uncorrelated HALE',
@@ -25,12 +25,12 @@ truth_folders = ( #'C:\\Users\\pkhomchuk\\My Projects\\UAS encounters\\MIT_LL\\U
                   #'C:\\Users\\pkhomchuk\\My Projects\\UAS encounters\\MIT_LL\\Maneuver',
                   #'C:\\Users\\pkhomchuk\\My Projects\\UAS encounters\\MIT_LL\\Straight',
                   #'C:\\Users\\pkhomchuk\\My Projects\\UAS encounters\\MIT_LL\\55',
-                  'C:\\Users\\pkhomchuk\\My Projects\\UAS - FAA Delivery\\UAS - FAA Software\\TruthServer\\scenario_files',
-                  'C:\\Users\\pkhomchuk\\My Projects\\UAS - FAA Delivery\\UAS - FAA Software\\TruthServer\\scenario_files',
+                  'C:\\Users\\pkhomchuk\\My Projects\\UAS - FAA Software June 2016\\TruthServer\\scenario_files',
+                  'C:\\Users\\pkhomchuk\\My Projects\\UAS - FAA Software June 2016\\TruthServer\\scenario_files',
                   '' )
 
 #titles = ( 'Maneuver', 'Straight', '55', '' )
-titles = ( '3D', '4D', '' )
+titles = ( 'Best Sensor', 'Sequential Update', '' )
 #itles = ( 'Uncorrelated HALE', '' )
 
 NMI2FT = 6076.11548
@@ -75,7 +75,7 @@ for ind, folder in enumerate( output_folders ) :
         truth_ind = 0
         for filename in output_file_names :
             output = OutputFile.read( folder + "\\" + filename )
-            trk = OutputFile.Track( output, beacon = TGT_BEACON, sensor = 'radar' );
+            trk = OutputFile.Track( output, rack_id = 1, track_type = 2  );
             if trk.dataIsGood :
                 truth_ind = int( math.floor( ( int( filename.split( '.' )[ 0 ][ 3: ] ) - 1 ) / N_MONTE_CARLO ) )
                 err = TrkErrors.Errors( own_true[ ind ][ truth_ind ], tgt_true[ ind ][ truth_ind ], trk, True )
